@@ -7,7 +7,7 @@ sequenceDiagram
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/new_note
     activate server
     
-    Note right of server: Server appends the new note to the existing notes in data.json.
+    Note left of server: Server appends the new note to the existing notes in data.json.
 
     server-->>browser: HTTP status code 302
     deactivate server
