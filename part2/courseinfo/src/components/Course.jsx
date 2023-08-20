@@ -8,7 +8,7 @@ const Total = ({ parts }) => {
 
 const Header = ({ text }) => {
     return (
-        <h1>{text}</h1>
+        <h2>{text}</h2>
     )
 }
 
@@ -21,7 +21,7 @@ const Part = (props) => {
 }
 
 const Content = ({ parts }) => {
-            const partsList = parts.map(part => <Part name = {part.name} exercises = {part.exercises} /> )
+    const partsList = parts.map(part => <Part name = {part.name} exercises = {part.exercises} key = {part.id}/> )
     return (
         <>  
            {partsList}
