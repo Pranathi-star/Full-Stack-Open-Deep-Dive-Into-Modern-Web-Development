@@ -24,7 +24,8 @@ const App = () => {
     if (alreadyPresent === false){
       const newEntry = {
         name: newName,
-        number: newNumber
+        number: newNumber,
+        id: persons.length + 1
       }
       let newPersons = persons.concat(newEntry)
       setPersons(newPersons)
