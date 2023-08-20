@@ -21,7 +21,7 @@ const Part = (props) => {
 }
 
 const Content = ({ parts }) => {
-    const partsList = parts.map(part => <Part name = {part.name} exercises = {part.exercises} /> )
+            const partsList = parts.map(part => <Part name = {part.name} exercises = {part.exercises} /> )
     return (
         <>  
            {partsList}
@@ -30,6 +30,7 @@ const Content = ({ parts }) => {
 }
 
 const Course = ({ course }) => {
+
     return (
         <>
             <Header text = {course.name} />
