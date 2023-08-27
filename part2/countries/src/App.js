@@ -7,13 +7,31 @@ const Results = ({countries}) => {
       <p>Too many matches, specify another filter</p>
     )
   }
-  else {
+  else if (countries.length > 1){
     return (
       <>
       {countries.map((country) => <p>{country.name.common}</p>)}
       </>
-)
-}
+    )
+  }
+  else if (countries.length === 1){
+    console.log(countries[0])
+    const langObject = countries[0].languages
+    const langList = Object.values(langObject)
+    const languages = langList.map((lang) => <li>{lang}</li>)
+    return (
+      <>
+        <h1>{countries[0].name.common}</h1>
+        <p>capital {countries[0].capital[0]}</p>
+        <p>area {countries[0].area}</p>
+        <h2>languages:</h2>
+        <ul>
+          {languages}
+        </ul>
+        <img src={countries[0].flags.png} alt={countries[0].flags.alt} />
+      </>
+    )
+  }
 }
 
 function App() {
