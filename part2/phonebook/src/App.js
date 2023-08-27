@@ -1,6 +1,41 @@
 import { useState, useEffect } from 'react'
 import numberService from './services/numbers'
 
+const goodNotificationStyle = {
+  color: 'green',
+  background: 'lightgrey',
+  fontSize: 20,
+  borderStyle: 'solid',
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10
+}
+
+const badNotificationStyle = {
+  color: 'red',
+  background: 'lightgrey',
+  fontSize: 20,
+  borderStyle: 'solid',
+  borderRadius: 5,
+  padding: 10,
+  marginBottom: 10
+}
+
+const Notification = ({ message, isGood }) => {
+  if (message === null) {
+    return null
+  }
+
+  const notificationStyle = isGood?
+    goodNotificationStyle : badNotificationStyle
+
+  return (
+    <div style={notificationStyle}>
+      {message}
+    </div>
+  )
+}
+
 const Filter = ({ handleFilter }) => {
   return (
     <>
@@ -46,6 +81,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filtered, setFiltered] = useState(persons)
+  const [isGood, setIsGood] = useState(null)
+  const [message, setMessage] = useState(null)
 
   let alreadyPresent = false;
 
@@ -59,7 +96,7 @@ const App = () => {
     )
   }, [])
 
-  const handleSubmit = (event, maxId) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     for (let idx in persons){
       if (persons[idx].name === newName){
@@ -78,8 +115,10 @@ const App = () => {
         numberResponse => {
           setPersons(persons.concat(numberResponse))
           setFiltered(persons.concat(numberResponse))
+          positiveNotification(numberResponse.name)
         }
       )
+      .catch(error => negativeNotification(error.response.data.error))
     }
     else{
       if (window.confirm(newName + " is already added to phonebook, replace the old number with a new one?")){
@@ -90,8 +129,10 @@ const App = () => {
           const newPersons = persons.map(p => p.name !== newName ? p : updatedEntry)
           setPersons(newPersons)
           setFiltered(newPersons)
+          positiveNotification(updatedEntry.name)
         }
         )
+        .catch(error => negativeNotification(error.response.data.error))
       }
     }
   }
@@ -127,9 +168,22 @@ const App = () => {
       )
     }
   }
+
+  const positiveNotification = (name) => {
+    setIsGood(true)
+    setMessage("Added " + name)
+    setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
+  }
+
+  const negativeNotification = (name) => {
+    setIsGood(false)
+    setMessage("Information of " + {name} + " has already been removed from the server")
+    setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
+  }
   
   return (
     <div>
+      <Notification message={message} isGood={isGood}/>
       <h2>Phonebook</h2>
       <Filter handleFilter = {handleFilter}/>
       <h2>Add a new</h2>
