@@ -68,9 +68,12 @@ const App = () => {
         number: newNumber,
         id: persons.length + 1
       }
-      let newPersons = persons.concat(newEntry)
-      setPersons(newPersons)
-      setFiltered(newPersons)
+
+      axios.post("http://localhost:3001/persons", newEntry)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setFiltered(persons.concat(response.data))
+      })
 
     }
     else{
