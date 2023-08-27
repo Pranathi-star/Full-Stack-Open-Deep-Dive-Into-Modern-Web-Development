@@ -27,10 +27,15 @@ const PersonForm = ({ handleSubmit, handleChangeName, handleChangeNumber }) => {
   )
 }
 
-const Persons = ({ filtered }) => {
+const Persons = ({ filtered, handleDelete }) => {
   return (
     <>
-      {filtered.map((person) => <p key={person.name}>{person.name} {person.number}</p>)}
+      {filtered.map((person) => 
+      <div key={person.id}>
+        <p style={{display: 'inline-block', paddingRight: '10px'}}>{person.name} {person.number}</p>
+        <button style={{display: 'inline-block'}} onClick={() => handleDelete(person.id)}>delete</button>
+      </div>
+      )}
     </>
   )
 }
@@ -54,7 +59,7 @@ const App = () => {
     )
   }, [])
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, maxId) => {
     event.preventDefault();
     for (let idx in persons){
       if (persons[idx].name === newName){
@@ -65,8 +70,7 @@ const App = () => {
     if (alreadyPresent === false){
       const newEntry = {
         name: newName,
-        number: newNumber,
-        id: persons.length + 1
+        number: newNumber
       }
 
       numberService.addNumber(newEntry)
@@ -97,6 +101,22 @@ const App = () => {
     console.log(event.target.value)
     setNewNumber(event.target.value)  
   }
+
+  const getName = (id) => {
+    return persons.find(person => person.id === id).name
+  }
+
+  const handleDelete = (id) => {
+    if (window.confirm('Delete ' + getName(id) + '?')){
+      const newPersons = persons.filter((item) => item.id !== id);
+      numberService.deleteNumber(id)
+      .then(() => {
+        setFiltered(newPersons)
+        setPersons(newPersons)
+      }
+      )
+    }
+  }
   
   return (
     <div>
@@ -105,7 +125,7 @@ const App = () => {
       <h2>Add a new</h2>
       <PersonForm handleSubmit = {handleSubmit} handleChangeName = {handleChangeName} handleChangeNumber = {handleChangeNumber}/>
       <h2>Numbers</h2>
-      <Persons filtered = {filtered} />
+      <Persons filtered = {filtered} handleDelete = {handleDelete} />
     </div>
   )
 }
