@@ -14,11 +14,17 @@ const addNumber = (newEntry) => {
     .then(response => response.data)
 }
 
-const deleteNumber = (name) => {
+const deleteNumber = (id) => {
     return axios
-    .delete(baseUrl + `/${name}`)
+    .delete(baseUrl + `/${id}`)
     .then(response => response.data)
 }
 
-const numberService = { getNumbers, addNumber, deleteNumber }
+const updateNumber = (updatedEntry, id) => {
+    return axios
+    .put(baseUrl + `/${id}`, updatedEntry)
+    .then(response => response.data)
+}
+
+const numberService = { getNumbers, addNumber, deleteNumber, updateNumber }
 export default numberService
