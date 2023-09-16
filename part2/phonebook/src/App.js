@@ -4,21 +4,21 @@ import numberService from './services/numbers'
 const goodNotificationStyle = {
   color: 'green',
   background: 'lightgrey',
-  fontSize: 20,
+  fontSize: `20`,
   borderStyle: 'solid',
-  borderRadius: 5,
-  padding: 10,
-  marginBottom: 10
+  borderRadius: `5`,
+  padding: `10`,
+  marginBottom: `10`
 }
 
 const badNotificationStyle = {
   color: 'red',
   background: 'lightgrey',
-  fontSize: 20,
+  fontSize: `20`,
   borderStyle: 'solid',
-  borderRadius: 5,
-  padding: 10,
-  marginBottom: 10
+  borderRadius: `5`,
+  padding: `10`,
+  marginBottom: `10`
 }
 
 const Notification = ({ message, isGood }) => {
@@ -29,6 +29,7 @@ const Notification = ({ message, isGood }) => {
   const notificationStyle = isGood?
     goodNotificationStyle : badNotificationStyle
 
+  console.log(notificationStyle)
   return (
     <div style={notificationStyle}>
       {message}
@@ -118,7 +119,7 @@ const App = () => {
           positiveNotification(numberResponse.name)
         }
       )
-      .catch(error => negativeNotification(error.response.data.error))
+      .catch(error => {console.log(error); negativeNotification(error)})
     }
     else{
       if (window.confirm(newName + " is already added to phonebook, replace the old number with a new one?")){
@@ -132,7 +133,7 @@ const App = () => {
           positiveNotification(updatedEntry.name)
         }
         )
-        .catch(error => negativeNotification(error.response.data.error))
+        .catch(error => negativeNotification(error))
       }
     }
   }
@@ -171,13 +172,13 @@ const App = () => {
 
   const positiveNotification = (name) => {
     setIsGood(true)
-    setMessage("Added " + name)
+    setMessage(`Added ${name}`)
     setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
   }
 
-  const negativeNotification = (name) => {
+  const negativeNotification = (error) => {
     setIsGood(false)
-    setMessage("Information of " + {name} + " has already been removed from the server")
+    setMessage(`${error.response.data.error}`)
     setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
   }
   
