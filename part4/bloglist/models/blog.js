@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+
 mongoose.set("strictQuery", false)
 
 const blogSchema = new mongoose.Schema({
@@ -8,11 +9,12 @@ const blogSchema = new mongoose.Schema({
   likes: Number
 })
 
-const password = encodeURIComponent(process.env.MONGO_PASSWORD)
-const mongoUrl = `mongodb+srv://pranathik2001:${password}@cluster0.ptqxg5d.mongodb.net/?retryWrites=true&w=majority`
-console.log(mongoUrl)
-mongoose.connect(mongoUrl)
-.then(result => {console.log("Connected to Mongo")})
-.catch(err => console.log(err))
+blogSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
 
 module.exports = mongoose.model('Blog', blogSchema)
