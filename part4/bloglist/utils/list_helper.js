@@ -10,6 +10,26 @@ const totalLikes = (blogs) => {
   return total
 }
 
+const favouriteBlog = (blogs) => {
+  if (blogs.length === 0) {
+    return {}
+  }
+  let favouriteBlog = blogs[0]
+  req = ["author", "likes", "title"]
+  blogs.forEach(element => {
+    if (element.likes > favouriteBlog.likes) {
+      let newElement = {};
+      for (const i in element){
+        if (req.includes(i)){
+          newElement[i] = element[i];
+        }
+      }
+      favouriteBlog = newElement
+    }
+  })
+  return favouriteBlog
+}
+
 module.exports = {
-  dummy, totalLikes
+  dummy, totalLikes, favouriteBlog
 }
