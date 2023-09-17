@@ -45,6 +45,20 @@ const mostBlogs = (blogs) => {
   return _.maxBy(newGrouping, (element) =>  element.blogs)
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return {}
+  }
+  const groupedByAuthor = _.groupBy(blogs, (element) => element.author)
+  let newGrouping = []
+  for (let i in groupedByAuthor){
+    let likesSummation = _.sumBy(groupedByAuthor[i], function(o) { return o.likes; });
+    let subGrouping = {"author": i, "likes": likesSummation}
+    newGrouping.push(subGrouping)
+  }
+  return _.maxBy(newGrouping, (element) =>  element.likes)
+}
+
 module.exports = {
-  dummy, totalLikes, favouriteBlog, mostBlogs
+  dummy, totalLikes, favouriteBlog, mostBlogs, mostLikes
 }
