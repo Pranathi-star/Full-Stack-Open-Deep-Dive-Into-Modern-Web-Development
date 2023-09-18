@@ -62,7 +62,25 @@ test('blog without title is not added', async () => {
     const newBlog = {
         _id: "5a422b891b54a676234d17fa",
         author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
+        url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html",
+        likes: 10,
+        __v: 0
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400)
+  
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
+test('blog without url is not added', async () => {
+    const newBlog = {
+        _id: "5a422b891b54a676234d17f99",
+        title: "First class tests",
+        author: "Robert C. Martin",
         likes: 10,
         __v: 0
     }
