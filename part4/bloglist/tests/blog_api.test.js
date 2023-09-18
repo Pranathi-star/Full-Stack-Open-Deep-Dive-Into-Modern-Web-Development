@@ -118,6 +118,13 @@ test("likes property defaults to 0", async () => {
     expect(addedBlog.likes).toBe(0)
 })
 
+test("deletion of blog", async () => {
+    const id = "5a422b3a1b54a676234d17f8"
+    await api
+      .delete(`/api/blogs/${id}`)
+      .expect(204)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
