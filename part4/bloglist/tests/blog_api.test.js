@@ -78,8 +78,26 @@ test('blog without title is not added', async () => {
 
 test("blog has id property", async () => {
     const blogsAtEnd = await helper.blogsInDb()
-    console.log(blogsAtEnd)
     expect(blogsAtEnd[0].id).toBeDefined()
+})
+
+test("likes property defaults to 0", async () => {
+    const newBlog = {
+        _id: "5a422b3a1b54a676234d17f8",
+        title: "Canonical string reduction",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+        __v: 0
+    }
+  
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    
+    const addedBlog = await Blog.findById("5a422b3a1b54a676234d17f8")
+    expect(addedBlog.likes).toBe(0)
 })
 
 afterAll(async () => {
