@@ -125,6 +125,24 @@ test("deletion of blog", async () => {
       .expect(204)
 })
 
+test('a valid blog can be updated', async () => {
+    const id = "5a422b3a1b54a676234d17f9"
+
+    const updatedBlog = {
+        title: "Canonical string reduction",
+        author: "Edsger W. Dijkstra",
+        url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+        likes: 50,
+        __v: 0
+    }
+  
+    await api
+      .put(`/api/blogs/${id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
