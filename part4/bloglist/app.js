@@ -1,5 +1,6 @@
 const config = require('./utils/config')
 const express = require('express')
+require('express-async-errors')
 const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
@@ -10,7 +11,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 const password = config.MONGODB_PASSWORD
-const mongoUrl = `mongodb+srv://pranathik2001:${password}@cluster0.ptqxg5d.mongodb.net/?retryWrites=true&w=majority`
+const mongoUrl = `mongodb+srv://pranathik2001:${password}@cluster0.ptqxg5d.mongodb.net/blogApp?retryWrites=true&w=majority`
 
 mongoose.connect(mongoUrl)
   .then(() => {
