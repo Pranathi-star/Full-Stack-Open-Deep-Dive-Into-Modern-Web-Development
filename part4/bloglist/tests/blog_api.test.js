@@ -65,7 +65,7 @@ test('a valid blog can be added', async () => {
       .post('/api/blogs')
       .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
-      .expect(200)
+      .expect(201)
       .expect('Content-Type', /application\/json/)
     
     const blogsAtEnd = await helper.blogsInDb()

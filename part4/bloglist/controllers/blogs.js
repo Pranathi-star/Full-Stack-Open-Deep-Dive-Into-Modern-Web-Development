@@ -18,13 +18,13 @@ blogsRouter.post('/', async (request, response) => {
   user.notes = user.blogs.concat(savedBlog._id)
   await user.save()
 
-  response.json(savedBlog)
+  response.status(201).json(savedBlog)
 })
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
   .find({}).populate('user', {'username': 1, 'name': 1})
-  response.json(blogs)
+  response.status(200).json(blogs)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
@@ -40,13 +40,20 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 blogsRouter.put("/:id", async (request, response) => {
-  const result = await Blog.findByIdAndUpdate(request.params.id, {
-    title: request.body.title,
-    author: request.body.author,
-    url: request.body.url,
-    likes: request.body.likes
-  }, { new: true, runValidators: true, context: 'query' })
-  response.status(200).json(result)
+  const blog = await Blog.findById(request.params.id)
+  const userid = request.user.id
+  if ( blog.user.toString() === userid.toString() ){
+    const result = await Blog.findByIdAndUpdate(request.params.id, {
+      title: request.body.title,
+      author: request.body.author,
+      url: request.body.url,
+      likes: request.body.likes
+    }, { new: true, runValidators: true, context: 'query' })
+    response.status(200).json(result)
+  }
+  else {
+    response.status(401).json({"error": "Unauthorized"})
+  }
 })
 
 
