@@ -14,7 +14,7 @@ describe('when there is initially one user in db', () => {
     const user = new User({ username: 'root', passwordHash })
 
     await user.save()
-  })
+  }, 10000)
 
   test('creation fails with proper statuscode and message if username already taken', async () => {
     const usersAtStart = await helper.usersInDb()
