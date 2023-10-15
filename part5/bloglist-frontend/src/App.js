@@ -1,43 +1,11 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
-
-const goodNotificationStyle = {
-  color: 'green',
-  background: 'lightgrey',
-  fontSize: `20`,
-  borderStyle: 'solid',
-  borderRadius: `5`,
-  padding: `10`,
-  marginBottom: `10`
-}
-
-const badNotificationStyle = {
-  color: 'red',
-  background: 'lightgrey',
-  fontSize: `20`,
-  borderStyle: 'solid',
-  borderRadius: `5`,
-  padding: `10`,
-  marginBottom: `10`
-}
-
-const Notification = ({ message, isGood }) => {
-  if (message === null) {
-    return null
-  }
-
-  const notificationStyle = isGood?
-    goodNotificationStyle : badNotificationStyle
-
-  console.log(notificationStyle)
-  return (
-    <div style={notificationStyle}>
-      <p>{message}</p>
-    </div>
-  )
-}
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -51,6 +19,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState('')
   const [isGood, setIsGood] = useState(null)
   const [message, setMessage] = useState(null)
+  const [loginVisible, setLoginVisible] = useState(false)
   
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -66,6 +35,22 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogForm = () => {
+    return (
+      <Togglable buttonLabel='new note'>
+        <BlogForm
+          handleNewBlog={handleNewBlog}
+          title={title}
+          handleTitleChange={({ target }) => setTitle(target.value)}
+          author={author}
+          handleAuthorChange={({ target }) => setAuthor(target.value)}
+          url
+          handleUrlChange={({ target }) => setUrl(target.value)} 
+        />
+      </Togglable>
+    )
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -129,75 +114,32 @@ const negativeNotification = () => {
 
 
 if (user === null) {
-return (
-    <div>
-      <Notification message={message} isGood={isGood} />
-    <h2>Log in to application</h2>
-    <form onSubmit={handleLogin}>
-    <div>
-        username
-        <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => setUsername(target.value)}
+  return (
+      <div>
+        <h2>Blogs</h2>
+        <Notification message={message} isGood={isGood} />
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleSubmit={handleLogin}
         />
-    </div>
-    <div>
-        password
-        <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => setPassword(target.value)}
-        />
-    </div>
-    <button type="submit">login</button>
-    </form>
-    </div>
-)
+      </div>
+  )
 }
 
 return (
 <div>
     <h2>blogs</h2>
     <Notification message={message} isGood={isGood}/>
-    <span style={{"display": "inline"}}>
-      <p>{user.name} logged in</p> <button onClick={handleLogout}>logout</button>
-    </span>
-    <h2>create new</h2>
-    <form onSubmit={handleNewBlog}>
-    <div>
-        title
-        <input
-        type="text"
-        value={title}
-        name="title"
-        onChange={({ target }) => setTitle(target.value)}
-        />
+    <div style={{"display": "flex"}}>
+      <p>{user.name} logged in</p> 
+      <button onClick={handleLogout}>logout</button>
     </div>
-    <div>
-        author
-        <input
-        type="text"
-        value={author}
-        name="author"
-        onChange={({ target }) => setAuthor(target.value)}
-        />
-    </div>
-    <div>
-        url
-        <input
-        type="text"
-        value={url}
-        name="url"
-        onChange={({ target }) => setUrl(target.value)}
-        />
-    </div>
-    <button type="submit">create</button>
-    </form>
+    {blogForm()}
     {blogs.map(blog =>
-    <Blog key={blog.id} blog={blog} />
+      <Blog key={blog.id} blog={blog} />
     )}
 </div>
 )
