@@ -3,6 +3,42 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+const goodNotificationStyle = {
+  color: 'green',
+  background: 'lightgrey',
+  fontSize: `20`,
+  borderStyle: 'solid',
+  borderRadius: `5`,
+  padding: `10`,
+  marginBottom: `10`
+}
+
+const badNotificationStyle = {
+  color: 'red',
+  background: 'lightgrey',
+  fontSize: `20`,
+  borderStyle: 'solid',
+  borderRadius: `5`,
+  padding: `10`,
+  marginBottom: `10`
+}
+
+const Notification = ({ message, isGood }) => {
+  if (message === null) {
+    return null
+  }
+
+  const notificationStyle = isGood?
+    goodNotificationStyle : badNotificationStyle
+
+  console.log(notificationStyle)
+  return (
+    <div style={notificationStyle}>
+      <p>{message}</p>
+    </div>
+  )
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('') 
@@ -13,7 +49,9 @@ const App = () => {
   const [url, setUrl] = useState('') 
   const [blog, setBlog] = useState(null) 
   const [errorMessage, setErrorMessage] = useState('')
-
+  const [isGood, setIsGood] = useState(null)
+  const [message, setMessage] = useState(null)
+  
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -44,6 +82,7 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       setErrorMessage('Wrong credentials')
+      negativeNotification()
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -65,6 +104,7 @@ const handleNewBlog = async (event) => {
         title, author, url, user
       })
       setBlog(newBlog)
+      positiveNotification(title, author)
       setTitle('')
       setUrl('')
     } catch (exception) {
@@ -75,10 +115,23 @@ const handleNewBlog = async (event) => {
     }
 }
 
+const positiveNotification = (title, author) => {
+  setIsGood(true)
+  setMessage(`a new blog ${title} by ${author} added`)
+  setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
+}
+
+const negativeNotification = () => {
+  setIsGood(false)
+  setMessage(`wrong username or password`)
+  setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
+}
+
 
 if (user === null) {
 return (
     <div>
+      <Notification message={message} isGood={isGood} />
     <h2>Log in to application</h2>
     <form onSubmit={handleLogin}>
     <div>
@@ -108,7 +161,10 @@ return (
 return (
 <div>
     <h2>blogs</h2>
-    <p>{user.name} logged in</p>
+    <Notification message={message} isGood={isGood}/>
+    <span style={{"display": "inline"}}>
+      <p>{user.name} logged in</p> <button onClick={handleLogout}>logout</button>
+    </span>
     <h2>create new</h2>
     <form onSubmit={handleNewBlog}>
     <div>
@@ -143,7 +199,6 @@ return (
     {blogs.map(blog =>
     <Blog key={blog.id} blog={blog} />
     )}
-    <button onClick={handleLogout}>logout</button>
 </div>
 )
 }
