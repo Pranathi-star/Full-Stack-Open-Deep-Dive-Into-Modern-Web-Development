@@ -12,10 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('') 
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('') 
-  const [author, setAuthor] = useState('') 
-  const [url, setUrl] = useState('') 
-  const [blog, setBlog] = useState(null) 
   const [errorMessage, setErrorMessage] = useState('')
   const [isGood, setIsGood] = useState(null)
   const [message, setMessage] = useState(null)
@@ -40,13 +36,7 @@ const App = () => {
     return (
       <Togglable buttonLabel='new note'>
         <BlogForm
-          handleNewBlog={handleNewBlog}
-          title={title}
-          handleTitleChange={({ target }) => setTitle(target.value)}
-          author={author}
-          handleAuthorChange={({ target }) => setAuthor(target.value)}
-          url
-          handleUrlChange={({ target }) => setUrl(target.value)} 
+          setIsGood = {setIsGood} setMessage = {setMessage} user = {user} setErrorMessage = {setErrorMessage}
         />
       </Togglable>
     )
@@ -79,31 +69,6 @@ const handleLogout = async (event) => {
     window.localStorage.removeItem(
         'loggedBlogappUser'
     ) 
-}
-
-const handleNewBlog = async (event) => {
-    event.preventDefault()
-    
-    try {
-      const newBlog = await blogService.create({
-        title, author, url, user
-      })
-      setBlog(newBlog)
-      positiveNotification(title, author)
-      setTitle('')
-      setUrl('')
-    } catch (exception) {
-      setErrorMessage('Wrong input')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
-    }
-}
-
-const positiveNotification = (title, author) => {
-  setIsGood(true)
-  setMessage(`a new blog ${title} by ${author} added`)
-  setTimeout(() => {setMessage(null); setIsGood(null)}, 5000)
 }
 
 const negativeNotification = () => {
