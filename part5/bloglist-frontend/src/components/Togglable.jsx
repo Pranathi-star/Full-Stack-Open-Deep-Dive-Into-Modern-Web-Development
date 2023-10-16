@@ -8,6 +8,7 @@ const Togglable = (props) => {
 
   const toggleVisibility = () => {
     setVisible(!visible)
+    props.setClosed(visible)
   }
 
   return (
@@ -17,7 +18,7 @@ const Togglable = (props) => {
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <button onClick={toggleVisibility}>hide</button>
       </div>
     </div>
   )
