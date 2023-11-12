@@ -4,15 +4,15 @@ const User = require('../models/user')
 
 blogsRouter.post('/', async (request, response) => {
   
-  const user = request.body.user
-
   const blog = new Blog({
     title: request.body.title,
     author:request.body.author,
     url:request.body.url,
     likes: request.body.likes,
-    user: user.id
+    user: request.user.id
   })
+
+  console.log("ffff"+JSON.stringify(request.user))
 
   const savedBlog = await blog.save()
 
@@ -26,21 +26,15 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+  console.log("hhh" + request.params)
   const blog = await Blog.findById(request.params.id)
-  const userid = request.user.id
-  if ( blog.user.toString() === userid.toString() ){
     const result = await Blog.findByIdAndDelete(request.params.id)
     response.status(204).json(result)
-  }
-  else {
-    response.status(401).json({"error": "Unauthorized"})
-  }
 })
 
 blogsRouter.put("/:id", async (request, response) => {
   const blog = await Blog.findById(request.params.id)
-  const userid = request.user.id
-  if ( blog.user.toString() === userid.toString() ){
+  console.log("gggg"+ request.user)
     const result = await Blog.findByIdAndUpdate(request.params.id, {
       title: request.body.title,
       author: request.body.author,
@@ -48,10 +42,6 @@ blogsRouter.put("/:id", async (request, response) => {
       likes: request.body.likes
     }, { new: true, runValidators: true, context: 'query' })
     response.status(200).json(result)
-  }
-  else {
-    response.status(401).json({"error": "Unauthorized"})
-  }
 })
 
 
