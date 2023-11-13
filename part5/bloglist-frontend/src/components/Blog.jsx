@@ -41,9 +41,9 @@ const Blog = ({ blog, handleLikes, canDelete, handleDelete }) => {
         likes {blog.likes}
         <button
           type="submit"
-          onClick={() => handleLikes({ ...blog, user: blog.user.id })}>
+          onClick={() => handleLikes({ ...blog, user: blog.user.id })} >
           like
-        </button>
+x        </button>
         <br />
         {blog.author}
         <br />
