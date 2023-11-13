@@ -18,7 +18,8 @@ const Blog = ({ blog, handleLikes, canDelete, handleDelete }) => {
           {blog.title} {blog.author}
           <button
             type="submit"
-            onClick={() => setInfo(true)}>
+            onClick={() => setInfo(true)}
+            id = {'viewButton'}>
             view
           </button>
         </div>
@@ -41,9 +42,10 @@ const Blog = ({ blog, handleLikes, canDelete, handleDelete }) => {
         likes {blog.likes}
         <button
           type="submit"
-          onClick={() => handleLikes({ ...blog, user: blog.user.id })} >
+          onClick={() => handleLikes({ ...blog, user: blog.user.id })}
+          id = {'likeButton'} >
           like
-x        </button>
+        </button>
         <br />
         {blog.author}
         <br />

@@ -66,7 +66,7 @@ test('clicking the like button twice causes event handler to be called twice', a
     const { container } = render(<Blog blog={blog} handleLikes={mockHandler} canDelete={jest.fn()} handleDelete={jest.fn()} /> )
     const button = screen.getByText('view')
     await user.click(button)
-    const likesButton = screen.getByText('like x')
+    const likesButton = screen.getByText('like')
     const likeUser = userEvent.setup()
     await likeUser.click(likesButton)
     expect(mockHandler).toHaveBeenCalledTimes(1);
