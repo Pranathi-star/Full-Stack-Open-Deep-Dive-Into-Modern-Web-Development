@@ -1,6 +1,17 @@
-import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux'
+import { createAnecdote } from '../reducers/anecdoteReducer'
 
-const AnecdoteForm = ({ addAnecdote }) => {
+const AnecdoteForm = () => {
+    const dispatch = useDispatch()
+
+    const addAnecdote = (event) => {
+        event.preventDefault();
+        var content = event.target.anecdote.value
+        console.log(content)
+        event.target.anecdote.value = ''
+        dispatch(createAnecdote(content))
+    }
+
     return (
         <div>
             <h2>create new</h2>
@@ -12,7 +23,4 @@ const AnecdoteForm = ({ addAnecdote }) => {
     )
 }
 
-AnecdoteForm.propTypes = {
-    addAnecdote: PropTypes.func
-}
 export default AnecdoteForm;
