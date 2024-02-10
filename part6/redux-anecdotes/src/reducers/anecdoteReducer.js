@@ -17,6 +17,11 @@ const asObject = (anecdote) => {
   }
 }
 
+const sortAnecdotes = (anecdotes) => {
+  anecdotes.sort((a, b) => b.votes - a.votes)
+  return anecdotes
+}
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
@@ -24,9 +29,11 @@ const reducer = (state = initialState, action) => {
     case "VOTE":
       var anecdoteToChange = state.find(item => item.id == action.payload);
       var changedAnecdote = {...anecdoteToChange, votes: anecdoteToChange.votes + 1}
-      return state.map(anecdote => anecdote.id != action.payload ? anecdote: changedAnecdote)
+      var newAnecdotes = state.map(anecdote => anecdote.id != action.payload ? anecdote: changedAnecdote)
+      return sortAnecdotes(newAnecdotes)
     case "ADD_NOTE":
-      return state.concat(asObject(action.payload.toString()))
+      newAnecdotes = state.concat(asObject(action.payload.toString()))
+      return sortAnecdotes(newAnecdotes)
     }
 
   return state
